@@ -1,0 +1,113 @@
+class Room:
+    def __init__(self, number, capacity, price, availability=True):
+        self.number = number
+        self.capacity = capacity
+        self.price = price
+        self.availability = availability
+        self.guest_name = None
+
+    def book_room(self, guest_name):
+        if self.availability:
+            self.availability = False
+            self.guest_name = guest_name
+            print(f"Room {self.number} booked for {guest_name}.")
+        else:
+            print(f"Room {self.number} is not available.")
+
+    def checkout(self):
+        if not self.availability:
+            print(f"Guest {self.guest_name} checked out from Room {self.number}.")
+            self.availability = True
+            self.guest_name = None
+        else:
+            print(f"Room {self.number} is already available.")
+
+
+class Hotel:
+    def __init__(self, name):
+        self.name = name
+        self.rooms = []
+
+    def add_room(self, room):
+        self.rooms.append(room)
+
+    def get_available_rooms(self):
+        available_rooms = []
+        for room in self.rooms:
+            if room.availability:
+                available_rooms.append(room)
+        return available_rooms
+
+    def display_available_rooms(self):
+        available_rooms = self.get_available_rooms()
+        print("Available Rooms:")
+        for room in available_rooms:
+            print(f"Room {room.number} - Capacity: {room.capacity}, Price: ${room.price} per night")
+
+    def display_all_rooms(self):
+        print("All Rooms:")
+        for room in self.rooms:
+            availability = "Available" if room.availability else "Not Available"
+            print(f"Room {room.number} - Capacity: {room.capacity}, Price: ${room.price} per night, Status: {availability}")
+
+
+def main():
+    hotel = Hotel("Hotel ABC")
+
+    while True:
+        print("\n1. Display Available Rooms")
+        print("2. Display All Rooms")
+        print("3. Add a Room")
+        print("4. Book a Room")
+        print("5. Check-out from a Room")
+        print("6. Quit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            hotel.display_available_rooms()
+
+        elif choice == "2":
+            hotel.display_all_rooms()
+
+        elif choice == "3":
+            room_number = int(input("Enter room number: "))
+            capacity = int(input("Enter room capacity: "))
+            price = float(input("Enter room price per night: "))
+            room = Room(room_number, capacity, price)
+            hotel.add_room(room)
+            print(f"Room {room_number} added successfully.")
+
+        elif choice == "4":
+            room_number = int(input("Enter room number to book: "))
+            guest_name = input("Enter guest name: ")
+            room_found = False
+            for room in hotel.rooms:
+                if room.number == room_number:
+                    room.book_room(guest_name)
+                    room_found = True
+                    break
+            if not room_found:
+                print(f"Room {room_number} not found.")
+
+        elif choice == "5":
+            room_number = int(input("Enter room number to check-out from: "))
+            room_found = False
+            for room in hotel.rooms:
+                if room.number == room_number:
+                    room.checkout()
+                    room_found = True
+                    break
+            if not room_found:
+                print(f"Room {room_number} not found.")
+
+        elif choice == "6":
+            print("Exiting program.")
+            break
+
+        else:
+            print("Invalid choice. Please try again.")
+
+
+if __name__ == "__main__":
+    main()
